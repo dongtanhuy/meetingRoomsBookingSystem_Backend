@@ -1,3 +1,4 @@
 {
-    "DBHost":"mongodb://localhost:27017/dev_meeting_rooms_booking_system"
+    "DBHost":"mongodb://localhost:27017/dev_meeting_rooms_booking_system",
+    "passportSecret": "juliandong"
 }
