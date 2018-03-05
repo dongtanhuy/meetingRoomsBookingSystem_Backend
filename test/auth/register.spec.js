@@ -14,7 +14,11 @@ describe('Register', () => {
       done(err)
     })
   })
-
+  after((done) => {
+    User.remove({}, (err) => {
+      done(err)
+    })
+  })
   describe('/POST user', () => {
     it('It should create new user', (done) => {
       let newUser = {

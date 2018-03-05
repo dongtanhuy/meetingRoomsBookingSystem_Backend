@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint . --quiet",
     "test": "mocha test/**/*.spec.js --timeout 10000 --exit",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "unit-test": "mocha --exit"
   },
   "author": "Julian Dong",
   "license": "ISC",
