@@ -3,7 +3,7 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 let login = (req, res) => {
   if (!req.body.email || !req.body.password) {
-    res.status('400')
+    res.status(400)
     res.json({
       success: false,
       auth: false,
