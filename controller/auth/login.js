@@ -34,12 +34,18 @@ let login = (req, res) => {
       // check password
       user.comparePassword(req.body.password, (err, isMatch) => {
         if (isMatch && !err) {
-          let token = jwt.sign(user.toJSON(), config.get('passportSecret'))
+          let token = jwt.sign(user.toJSON(), config.get('passportSecret', {expiresIn: '7d'}))
           res.status(200)
+          console.log(user)
           res.json({
             success: true,
             auth: true,
-            token: 'JWT ' + token
+            token: 'JWT ' + token,
+            user: {
+              email: user.email,
+              fullname: user.fullname,
+              status: user.status
+            }
           })
         } else {
           res.status(401).json({

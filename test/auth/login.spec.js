@@ -12,7 +12,7 @@ let User = require('../../model/User')
 chai.use(chaiHttp)
 const API = '/api/auth/login'
 describe('Login', () => {
-  before((done) => { // Before each test we empty the database
+  before((done) => {
     let newUser = new User({
       email: 'testlogin@gmail.com',
       fullname: 'Julian Dong',
@@ -51,6 +51,13 @@ describe('Login', () => {
         res.body.auth.should.be.eql(true)
         res.body.should.have.property('token')
         res.body.token.should.be.a('string')
+        res.body.should.have.property('user')
+        res.body.user.should.have.property('email')
+        res.body.user.email.should.be.eql('testlogin@gmail.com')
+        res.body.user.should.have.property('fullname')
+        res.body.user.fullname.should.be.eql('Julian Dong')
+        res.body.user.should.have.property('status')
+        res.body.user.status.should.be.eql(true)
         done()
       })
   })
