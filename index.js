@@ -10,8 +10,14 @@ const config = require('config')
 const router = require('./routes')
 
 const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config()
+if (process.env.NODE_ENV === 'test') {
+  mongoose.connect(config.get('test.DBHost'))
+} else if (process.env.NODE_ENV === 'dev') {
+  mongoose.connect(config.get('test.DBHost'))
+}
 
-mongoose.connect(config.get('DBHost'))
 mongoose.connection.on('error', function () {
   console.log('Could not connect to the database. Exiting now...')
   process.exit()
