@@ -14,8 +14,9 @@ const dotenv = require('dotenv')
 dotenv.config()
 if (process.env.NODE_ENV === 'test') {
   mongoose.connect(config.get('test.DBHost'))
-} else if (process.env.NODE_ENV === 'dev') {
-  mongoose.connect(config.get('test.DBHost'))
+}
+if (process.env.NODE_ENV === 'development') {
+  mongoose.connect(config.get('dev.DBHost'))
 }
 
 mongoose.connection.on('error', function () {

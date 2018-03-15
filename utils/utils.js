@@ -12,6 +12,14 @@ exports.getTokenFromHeaders = (headers) => {
   }
 }
 
+exports.extractToken = (tokenString) => {
+  let tokenArray = tokenString.split(' ')
+  if (tokenArray.length === 2) {
+    return tokenArray[1]
+  } else {
+    return null
+  }
+}
 const nodemailer = require('nodemailer')
 let id = process.env.Gmail_CLIENT_ID
 exports.transporter = nodemailer.createTransport({
