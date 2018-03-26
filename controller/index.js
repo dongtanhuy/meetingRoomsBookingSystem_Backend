@@ -4,10 +4,12 @@ let register = require('./auth/register')
 let forgetPassword = require('./auth/forgetPassword')
 let resetPassword = require('./auth/resetPassword')
 
+let createBooking = require('./booking/createBooking')
 module.exports = {
   login: login,
   register: register,
   forgetpassword: forgetPassword,
-  resetpassword: resetPassword
+  resetpassword: resetPassword,
+  createbooking: createBooking
   // export to route
 }
