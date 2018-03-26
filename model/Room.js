@@ -9,7 +9,7 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  status: { // TRUE => IN_USER, FALSE => DISABLED
+  status: { // TRUE => IN_USE, FALSE => DISABLED
     type: Boolean,
     required: true,
     default: true

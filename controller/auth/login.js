@@ -36,7 +36,6 @@ let login = (req, res) => {
         if (isMatch && !err) {
           let token = jwt.sign(user.toJSON(), config.get('passportSecret', {expiresIn: '7d'}))
           res.status(200)
-          console.log(user)
           res.json({
             success: true,
             auth: true,
@@ -44,6 +43,7 @@ let login = (req, res) => {
             user: {
               email: user.email,
               fullname: user.fullname,
+              admin: user.isAdmin,
               status: user.status
             }
           })

@@ -1,27 +1,27 @@
 const utils = require('../../utils/utils')
 const jwt = require('jsonwebtoken')
 const config = require('config')
-const Booking = require('../../model/BookingSession')
-const createBooking = (req, res) => {
+const Room = require('../../model/Room')
+let createNewRoom = (req, res) => {
   let token = utils.getTokenFromHeaders(req.headers)
-  if (!req.body.title || !req.body.date || !req.body.startAt || !req.body.endAt || !req.body.numberOfParticipants || !req.body.organizer || !req.body.room) {
-    res.status(400)
-    res.json({
-      success: false,
-      message: 'Bad Request'
-    })
-  } else if (token === null) {
+  if (!token) {
     // Handle 401
     res.status(401)
     res.json({
       success: false,
       message: 'Unauthorized'
     })
-  } else {
-    // Handle 500
+  } else if (!req.body.name || !req.body.max_size || !req.body.status) {
     // Handle 400
+    res.status(400)
+    res.json({
+      success: false,
+      message: 'Bad request'
+    })
+  } else {
     jwt.verify(token, config.get('passportSecret'), (err, result) => {
       if (err) {
+        // Handle 500
         if (err.name === 'JsonWebTokenError') {
           res.status(500)
           res.json({
@@ -29,6 +29,7 @@ const createBooking = (req, res) => {
             message: 'Server Error'
           })
         }
+        // Handle 400
         if (err.name === 'TokenExpiredError') {
           res.status(400)
           res.json({
@@ -37,19 +38,21 @@ const createBooking = (req, res) => {
           })
         }
       } else {
-        let session = new Booking({
-          title: req.body.title,
-          date: Date.parse(req.body.date),
-          startAt: Date.parse(req.body.startAt),
-          endAt: Date.parse(req.body.endAt + 86400),
-          numberOfParticipants: req.body.numberOfParticipants,
-          organizer: req.body.organizer,
-          room: req.body.room
-        })
-        // Validate here, handle 409 and 200
-        if (validate(session)) {
-          // 200
-          session.save((err, result) => {
+        if (!result.isAdmin) {
+          // Handle 403 forbiden
+          res.status(403)
+          res.json({
+            success: false,
+            message: 'Permission denied'
+          })
+        } else {
+          let newRoom = new Room({
+            name: req.body.name,
+            max_size: req.body.max_size,
+            status: req.body.status
+          })
+          newRoom.save((err, room) => {
+            console.log(err)
             if (err) {
               res.status(500)
               res.json({
@@ -60,18 +63,19 @@ const createBooking = (req, res) => {
               res.status(200)
               res.json({
                 success: true,
-                data: result
+                data: {
+                  id: room._id,
+                  name: room.name,
+                  max_size: room.max_size,
+                  status: room.status
+                },
+                message: 'Create new room successfully'
               })
             }
           })
-        } else {
-          // Handle 409
         }
       }
     })
   }
 }
-const validate = (session) => {
-  return true
-}
-module.exports = createBooking
+module.exports = createNewRoom
