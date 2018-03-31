@@ -76,7 +76,7 @@ describe('Booking new session', () => {
         res.body.data.should.have.property('numberOfParticipants')
         res.body.data.should.have.property('organizer')
         res.body.data.should.have.property('room')
-        res.body.data.should.have.property('state')
+        res.body.data.should.have.property('status')
         done()
       })
   })
