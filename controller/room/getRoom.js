@@ -6,7 +6,6 @@ const Room = require('../../model/Room')
 let getRoom = (req, res) => {
   let id = req.params.id
   let token = utils.getTokenFromHeaders(req.headers)
-  console.log('id:', id)
   if (!token) {
     // Handle 401
     res.status(401)

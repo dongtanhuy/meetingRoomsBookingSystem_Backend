@@ -15,9 +15,11 @@ routes.post(REGISTER, controller.register)
 routes.post(FORGET_PASSWORD, controller.forgetpassword)
 routes.post(RESET_PASSWORD, controller.resetpassword)
 routes.post(CREATE_BOOKING, controller.createbooking)
+routes.get(CREATE_BOOKING, controller.getAllBookings)
 routes.post(ROOM, controller.addNewRoom)
 routes.get(ROOMS, controller.getAllRooms)
 routes.get(ROOM_HAVE_ID, controller.getRoom)
 routes.put(ROOM_HAVE_ID, controller.editRoom)
+routes.delete(ROOM_HAVE_ID, controller.deleteRoom)
 
 module.exports = routes

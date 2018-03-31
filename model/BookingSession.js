@@ -30,7 +30,7 @@ const BookingSessionSchema = new mongoose.Schema({
     required: true,
     ref: 'Room'
   },
-  state: {
+  status: {
     type: String,
     required: true,
     options: ['UP_COMING', 'IN_COMING', 'CANCELED'],
