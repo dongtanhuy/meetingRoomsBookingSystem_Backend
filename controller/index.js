@@ -11,6 +11,7 @@ let deleteRoom = require('./room/deleteRoom')
 
 let createBooking = require('./booking/createBooking')
 let getAllBookings = require('./booking/getAllBookings')
+let getBooking = require('./booking/getBooking')
 module.exports = {
   login: login,
   register: register,
@@ -18,6 +19,7 @@ module.exports = {
   resetpassword: resetPassword,
   createbooking: createBooking,
   getAllBookings: getAllBookings,
+  getBooking: getBooking,
   addNewRoom: createNewRoom,
   getAllRooms: getRooms,
   getRoom: getRoom,
