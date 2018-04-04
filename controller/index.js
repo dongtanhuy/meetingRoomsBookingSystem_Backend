@@ -13,6 +13,7 @@ let createBooking = require('./booking/createBooking')
 let getAllBookings = require('./booking/getAllBookings')
 let getBooking = require('./booking/getBooking')
 let deleteBooking = require('./booking/deleteBooking')
+let editBooking = require('./booking/editBooking')
 module.exports = {
   login: login,
   register: register,
@@ -26,6 +27,7 @@ module.exports = {
   getAllRooms: getRooms,
   getRoom: getRoom,
   editRoom: editRoom,
-  deleteRoom: deleteRoom
+  deleteRoom: deleteRoom,
+  editBooking: editBooking
   // export to route
 }

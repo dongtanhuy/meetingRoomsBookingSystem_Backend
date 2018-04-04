@@ -41,37 +41,118 @@ const createBooking = (req, res) => {
           title: req.body.title,
           date: Date.parse(req.body.date),
           startAt: Date.parse(req.body.startAt),
-          endAt: Date.parse(req.body.endAt + 86400),
+          endAt: Date.parse(req.body.endAt),
           numberOfParticipants: req.body.numberOfParticipants,
           organizer: req.body.organizer,
           room: req.body.room
         })
         // Validate here, handle 409 and 200
-        if (validate(session)) {
-          // 200
-          session.save((err, result) => {
-            if (err) {
-              res.status(500)
-              res.json({
-                success: false,
-                message: 'Server Error'
-              })
+        Booking.find({date: session.date, room: session.room}, (err, bookings) => {
+          // console.log('New: ', session)
+          // console.log('Current: ', bookings)
+          let s = new Date(session.startAt).getTime()
+          let e = new Date(session.endAt).getTime()
+          let result = true
+          if (err) {
+            result = false
+          } else {
+            if (bookings === null || bookings.length === 0) {
+              result = false
             } else {
-              res.status(200)
-              res.json({
-                success: true,
-                data: result
-              })
+              for (let item of bookings) {
+                let s1 = new Date(item.startAt).getTime()
+                let e1 = new Date(item.endAt).getTime()
+                // console.log('s:', s)
+                // console.log('e:', e)
+                // console.log('s1:', s1)
+                // console.log('e1:', e1)
+                if (e > s1 && s < s1) {
+                  console.log('S < S1 < E')
+                  result = false
+                } else if (s < e1 && e > e1) {
+                  console.log('S < E1 < E')
+                  result = false
+                } else if (s < s1 && e > e1) {
+                  console.log('S < S1 && E > E1')
+                  result = false
+                } else if (s > s1 && e < e1) {
+                  console.log('S1 < S < E < E1')
+                  result = false
+                } else {
+                  console.log('OK')
+                  result = true
+                }
+              }
             }
-          })
-        } else {
-          // Handle 409
-        }
+          }
+          // console.log(result)
+          if (result) {
+            // 200
+            session.save((err, result) => {
+              if (err) {
+                res.status(500)
+                res.json({
+                  success: false,
+                  message: 'Server Error'
+                })
+              } else {
+                console.log(result)
+                res.status(200)
+                res.json({
+                  success: true,
+                  data: result
+                })
+              }
+            })
+          } else {
+            // Handle 409
+            res.status(409)
+            res.json({
+              success: false,
+              message: 'Room not available'
+            })
+          }
+        })
       }
     })
   }
 }
-const validate = (session) => {
-  return true
-}
+// const validate = (session) => {
+//   Booking.find({date: session.date, room: session.room}, (err, bookings) => {
+//     console.log('New: ', session)
+//     console.log('Current: ', bookings)
+//     let s = new Date(session.startAt).getTime()
+//     let e = new Date(session.endAt).getTime()
+//     let result = true
+//     if (err) {
+//       result = false
+//     } else {
+//       if (bookings === null || bookings.length === 0) {
+//         result = true
+//       } else {
+//         for (let item of bookings) {
+//           let s1 = new Date(item.startAt).getTime()
+//           let e1 = new Date(item.endAt).getTime()
+//           if (e > s1 && s < s1) {
+//             console.log('S < S1 < E1')
+//             result = false
+//           } else if (s < e1 && e > e1) {
+//             console.log('S < E1 < E')
+//             result = false
+//           } else if (s < s1 && e > e1) {
+//             console.log('S < S1 && E > E1')
+//             result = false
+//           } else if (s > s1 && e < e1) {
+//             console.log('S1 < S < E < E1')
+//             result = false
+//           } else {
+//             result = true
+//           }
+//         }
+//       }
+//     }
+//     console.log(result)
+//     return result
+//   })
+// }
 module.exports = createBooking

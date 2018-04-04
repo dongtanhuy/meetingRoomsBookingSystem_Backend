@@ -17,7 +17,7 @@ describe('Booking new session', () => {
   let roomID = ''
   let userID = ''
   let token = ''
-  before((done) => {
+  beforeEach((done) => {
     Room.remove({})
     Booking.remove({})
     User.remove({})
@@ -47,38 +47,6 @@ describe('Booking new session', () => {
     Booking.remove({})
     Room.remove({})
     done()
-  })
-
-  it('It should create new session without any conflict', (done) => {
-    let newSession = {
-      title: 'Test session',
-      date: new Date(),
-      startAt: new Date(),
-      endAt: new Date() + 86400,
-      numberOfParticipants: 10,
-      organizer: userID,
-      room: roomID
-    }
-    chai.request(server)
-      .post(API)
-      .set('token', 'JWT ' + token)
-      .send(newSession)
-      .end((req, res) => {
-        res.should.have.status(200)
-        res.body.should.have.property('success')
-        res.body.success.should.be.eql(true)
-        res.body.should.have.property('data')
-        res.body.data.should.be.an('Object')
-        res.body.data.should.have.property('title')
-        res.body.data.should.have.property('date')
-        res.body.data.should.have.property('startAt')
-        res.body.data.should.have.property('endAt')
-        res.body.data.should.have.property('numberOfParticipants')
-        res.body.data.should.have.property('organizer')
-        res.body.data.should.have.property('room')
-        res.body.data.should.have.property('status')
-        done()
-      })
   })
 
   it('It should not create new session if invalid token', (done) => {
