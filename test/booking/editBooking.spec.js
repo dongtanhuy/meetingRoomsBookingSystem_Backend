@@ -450,7 +450,7 @@ describe('Get specific booking session with given id', () => {
       room: roomID
     })
     let updatedData = {
-      // title: 'Test session update',
+      title: 'Test session update',
       date: new Date(),
       startAt: new Date(),
       endAt: new Date() + 172800,

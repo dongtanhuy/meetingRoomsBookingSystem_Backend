@@ -12,8 +12,8 @@ let editBooking = (req, res) => {
     startAt: req.body.startAt,
     endAt: req.body.endAt,
     numberOfParticipants: req.body.numberOfParticipants,
+    organizer: req.body.organizer,
     room: req.body.room
-
   }
   if (!token) {
     res.status(401)
@@ -33,7 +33,7 @@ let editBooking = (req, res) => {
       message: 'Bad Request'
     })
   } else {
-    jwt.verify(token, config.get('passportSecret'), (err, result) => {
+    jwt.verify(token, config.get('passportSecret'), (err, user) => {
       if (err) {
         // Handle 500
         if (err.name === 'JsonWebTokenError') {
@@ -52,7 +52,7 @@ let editBooking = (req, res) => {
           })
         }
       } else {
-        Booking.findByIdAndUpdate(id, updatedData, (err, result) => {
+        Booking.findById(id, (err, booking) => {
           if (err) {
             res.status(404)
             res.json({
@@ -60,12 +60,59 @@ let editBooking = (req, res) => {
               message: 'Bookings not found'
             })
           } else {
-            let currentUser = result._id
-            if (currentUser.toString !== result.organizer.toString()) {
+            let currentUser = user._id
+            if (currentUser.toString() !== booking.organizer.toString()) {
               res.status(403)
               res.json({
                 success: false,
                 message: 'Permission denied'
+              })
+            } else {
+              console.log(409)
+              let updatedObject = new Booking({
+                title: req.body.title,
+                date: Date.parse(req.body.date),
+                startAt: Date.parse(req.body.startAt),
+                endAt: Date.parse(req.body.endAt),
+                numberOfParticipants: req.body.numberOfParticipants,
+                organizer: req.body.organizer,
+                room: req.body.room
+              })
+              console.log('Updated data', updatedData)
+              Booking.find({date: updatedData.date, room: updatedData.room}, (err, bookings) => {
+                console.log(bookings)
+                if (err) {
+                  res.status(500)
+                  res.json({
+                    success: false,
+                    message: 'Server Error'
+                  })
+                } else {
+                  // res.json({done: 500})
+                  if (utils.validate(updatedObject, bookings)) {
+                    Booking.updateOne({_id: id}, updatedData, (err, result) => {
+                      if (err) {
+                        res.status(500)
+                        res.json({
+                          success: false,
+                          message: 'Server Error'
+                        })
+                      } else {
+                        res.status(200)
+                        res.json({
+                          success: true,
+                          message: 'Update successfully'
+                        })
+                      }
+                    })
+                  } else {
+                    res.status(409)
+                    res.json({
+                      success: false,
+                      message: 'Room not available'
+                    })
+                  }
+                }
               })
             }
           }

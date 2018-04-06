@@ -41,7 +41,7 @@ exports.validate = (session, bookings) => {
   let result = true
 
   if (bookings === null || bookings.length === 0) {
-    result = true
+    return true
   } else {
     for (let item of bookings) {
       let s1 = new Date(item.startAt).getTime()
@@ -52,19 +52,22 @@ exports.validate = (session, bookings) => {
       // console.log('e1:', e1)
       if (e > s1 && s < s1) {
         console.log('S < S1 < E')
-        result = false
-      } else if (s < e1 && e > e1) {
+        return false
+      }
+      if (s < e1 && e > e1) {
         console.log('S < E1 < E')
-        result = false
-      } else if (s < s1 && e > e1) {
+        return false
+      }
+      if (s < s1 && e > e1) {
         console.log('S < S1 && E > E1')
-        result = false
-      } else if (s > s1 && e < e1) {
+        return false
+      }
+      if (s > s1 && e < e1) {
         console.log('S1 < S < E < E1')
-        result = false
+        return false
       } else {
         console.log('OK')
-        result = true
+        // return true
       }
     }
   }
